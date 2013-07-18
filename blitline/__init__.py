@@ -5,8 +5,8 @@ import requests
 from urlparse import urlsplit
 
 class Function(object):
-    def __init__(self, name, **kw):
-        self.name = name
+    function_name = None
+    def __init__(self, **kw):
         self.functions = kw.pop('functions', [])
         self.save = kw.pop('save', None) or Save()
         self.params = kw
@@ -15,11 +15,11 @@ class Function(object):
         params = []
         for i in self.params.items():
             params.append('='.join(map(str, i)))
-        return '{0}({1}) -> {2}'.format(self.name, ','.join(params), str(self.save))
+        return '{0}({1}) -> {2}'.format(self.function_name, ','.join(params), str(self.save))
 
     def serialize(self, ctx):
         doc = {
-            'name': self.name,
+            'name': self.function_name,
             'params': self.params,
         }
         save = self.save.serialize(ctx)
