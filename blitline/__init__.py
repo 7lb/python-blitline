@@ -140,16 +140,16 @@ class JobResult(object):
         return r
 
     @classmethod
-    def poll_job(cls, job_id):
+    def poll_job(cls, job_id, timeout=5):
         url = "http://cache.blitline.com/listen/{job_id}".format(job_id=job_id)
-        r = requests.get(url, timeout=5)
+        r = requests.get(url, timeout=timeout)
         output = r.json
         if isinstance(output['results'], basestring):
             output['results'] = json.loads(output['results'])
         return output
 
-    def wait(self):
-        r = self.poll_job(self.job_id)['results']
+    def wait(self, timeout=5):
+        r = self.poll_job(self.job_id, timeout=timeout)['results']
         output = {
             'original_meta': r['original_meta'],
         }
