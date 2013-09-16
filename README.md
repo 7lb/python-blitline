@@ -5,7 +5,7 @@ Python client for blitline service. It is a thin wrapper over the JSON API.
 
 Install with pip:
 
-  $ pip install python-blitline
+    $ pip install python-blitline
 
 Documentation
 =============
