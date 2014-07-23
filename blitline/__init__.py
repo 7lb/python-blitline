@@ -105,7 +105,7 @@ class Job(object):
             "http://api.blitline.com/job",
             data={'json': json.dumps(doc)},
             timeout=5)
-        results = r.json['results']
+        results = r.json()['results']
         if r.status_code != 200 or 'error' in results:
             raise JobError(r.status_code, r.content)
         return JobResult.build_from_response(results)
@@ -143,7 +143,7 @@ class JobResult(object):
     def poll_job(cls, job_id, timeout=5):
         url = "http://cache.blitline.com/listen/{job_id}".format(job_id=job_id)
         r = requests.get(url, timeout=timeout)
-        output = r.json
+        output = r.json()
         if isinstance(output['results'], basestring):
             output['results'] = json.loads(output['results'])
         return output
