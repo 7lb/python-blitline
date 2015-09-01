@@ -4,19 +4,23 @@ import urllib2
 from datetime import datetime
 from lxml import etree
 
+
 def function_name(text, rex=re.compile(r'"name"\s*:\s*"([^"]+)"')):
     match = rex.search(text)
     if match:
         return match.group(1)
     return None
 
-parser = etree.HTMLParser()
-tree = etree.parse(urllib2.urlopen("http://www.blitline.com/docs/functions"), parser)
 
-functions = tree.xpath("""//div[contains(@class, 'thumbnail')]/div""")
+parser = etree.HTMLParser()
+tree = etree.parse(urllib2.urlopen(
+    "http://www.blitline.com/docs/functions"), parser)
+
 functions_data = []
+functions = tree.xpath(
+    """id("accordion")/div[contains(@class, "panel")]""")
 for f in functions:
-    code_nodes = f.xpath("div[contains(@class, 'hideable')]/pre")
+    code_nodes = f.xpath("./div[contains(@class, 'panel-collapse')]//pre")
     if not code_nodes:
         continue
     elif len(code_nodes) > 1:
@@ -27,7 +31,7 @@ for f in functions:
     if not fname:
         raise ValueError("HTML mismatch, function name not found")
 
-    doc_nodes = f.xpath("div[@class='caption']/p[contains(@class,'alert')]")
+    doc_nodes = f.xpath(".//h4//div[contains(@class, 'pull-left')][last()]/p")
     if not doc_nodes:
         doc = ''
     elif len(doc_nodes) > 1:
