@@ -154,6 +154,11 @@ class JobResult(object):
             'original_meta': r['original_meta'],
         }
         for i in r['images']:
+            error = i.get("error")
+
+            if error is not None:
+                raise JobError(200, error)
+
             iid = i.pop('image_identifier')
             output[iid] = i
         return output
